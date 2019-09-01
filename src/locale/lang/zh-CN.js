@@ -2,6 +2,8 @@ export default {
   home: '首页',
   login: '登录',
   components: '组件',
+  vm: '虚拟机',
+  vms_list: '虚拟机列表',
   count_to_page: '数字渐变',
   tables_page: '多功能表格',
   split_pane_page: '分割窗口',

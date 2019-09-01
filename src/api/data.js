@@ -1,5 +1,25 @@
 import axios from '@/libs/api.request'
 
+export const getOverview = (token) => {
+  return axios.request({
+    url: 'libvirt/overview/',
+    params: {
+      token
+    },
+    method: 'get'
+  })
+}
+
+export const getVmsList = (token) => {
+  return axios.request({
+    url: 'libvirt/domains/',
+    params: {
+      token
+    },
+    method: 'get'
+  })
+}
+
 export const getTableData = () => {
   return axios.request({
     url: 'get_table_data',

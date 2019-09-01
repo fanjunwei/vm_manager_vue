@@ -1,5 +1,9 @@
+<style lang="less">
+  @import './login.less';
+</style>
 <template>
   <Form ref="loginForm" :model="form" :rules="rules" @keydown.enter.native="handleSubmit">
+    <span class="error-message">{{errormessage}}</span>
     <FormItem prop="userName">
       <Input v-model="form.userName" placeholder="请输入用户名">
         <span slot="prepend">
@@ -38,12 +42,18 @@ export default {
           { required: true, message: '密码不能为空', trigger: 'blur' }
         ]
       }
+    },
+    errormessage: {
+      type: String,
+      default: () => {
+        return ''
+      }
     }
   },
   data () {
     return {
       form: {
-        userName: 'super_admin',
+        userName: '',
         password: ''
       }
     }

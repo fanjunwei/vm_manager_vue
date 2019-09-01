@@ -6,17 +6,19 @@ export const login = ({ userName, password }) => {
     password
   }
   return axios.request({
-    url: 'login',
+    url: 'user/login/',
     data,
     method: 'post'
   })
 }
 
 export const getUserInfo = (token) => {
+  let test = 'test'
   return axios.request({
-    url: 'get_info',
+    url: 'user/get_info/',
     params: {
-      token
+      token,
+      test
     },
     method: 'get'
   })

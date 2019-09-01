@@ -54,6 +54,7 @@ export default [
     path: '',
     name: 'doc',
     meta: {
+      hideInMenu: true,
       title: '文档',
       href: 'https://lison16.github.io/iview-admin-doc/#/',
       icon: 'ios-book'
@@ -64,6 +65,7 @@ export default [
     name: 'join',
     component: Main,
     meta: {
+      hideInMenu: true,
       hideInBread: true
     },
     children: [
@@ -99,9 +101,31 @@ export default [
     ]
   },
   {
+    path: '/vms',
+    name: 'vm',
+    meta: {
+      icon: 'logo-buffer',
+      title: '虚拟机'
+      // hideInBread: true
+    },
+    component: Main,
+    children: [
+      {
+        path: 'vms_list',
+        name: 'vms_list',
+        meta: {
+          icon: 'ios-desktop',
+          title: '虚拟机列表'
+        },
+        component: () => import('@/view/vms/vms_list/index.vue')
+      }
+    ]
+  },
+  {
     path: '/components',
     name: 'components',
     meta: {
+      hideInMenu: true,
       icon: 'logo-buffer',
       title: '组件'
     },
@@ -221,6 +245,7 @@ export default [
     path: '/update',
     name: 'update',
     meta: {
+      hideInMenu: true,
       icon: 'md-cloud-upload',
       title: '数据上传'
     },
@@ -250,6 +275,7 @@ export default [
     path: '/excel',
     name: 'excel',
     meta: {
+      hideInMenu: true,
       icon: 'ios-stats',
       title: 'EXCEL导入导出'
     },
@@ -279,6 +305,7 @@ export default [
     path: '/tools_methods',
     name: 'tools_methods',
     meta: {
+      hideInMenu: true,
       hideInBread: true
     },
     component: Main,
@@ -299,6 +326,7 @@ export default [
     path: '/i18n',
     name: 'i18n',
     meta: {
+      hideInMenu: true,
       hideInBread: true
     },
     component: Main,
@@ -318,6 +346,7 @@ export default [
     path: '/error_store',
     name: 'error_store',
     meta: {
+      hideInMenu: true,
       hideInBread: true
     },
     component: Main,
@@ -357,6 +386,7 @@ export default [
     path: '/directive',
     name: 'directive',
     meta: {
+      hideInMenu: true,
       hideInBread: true
     },
     component: Main,
@@ -376,6 +406,7 @@ export default [
     path: '/multilevel',
     name: 'multilevel',
     meta: {
+      hideInMenu: true,
       icon: 'md-menu',
       title: '多级菜单'
     },

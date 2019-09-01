@@ -11,7 +11,7 @@ import {
   localSave,
   localRead
 } from '@/libs/util'
-import { saveErrorLogger } from '@/api/data'
+import { saveErrorLogger, getOverview } from '@/api/data'
 import router from '@/router'
 import routers from '@/router/routers'
 import config from '@/config'
@@ -100,6 +100,11 @@ export default {
       }
       saveErrorLogger(info).then(() => {
         commit('addError', data)
+      })
+    },
+    getOverview ({ rootState, commit }) {
+      return getOverview(rootState.user.token).then(res => {
+        return res.data
       })
     }
   }
