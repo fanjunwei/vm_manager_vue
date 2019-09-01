@@ -20,6 +20,29 @@ export const getVmsList = (token) => {
   })
 }
 
+export const vmAction = (token, uuid, action) => {
+  return axios.request({
+    url: 'libvirt/domains/' + uuid + '/action/',
+    params: {
+      token
+    },
+    data: {
+      action: action
+    },
+    method: 'post'
+  })
+}
+
+export const vmXml = (token, uuid) => {
+  return axios.request({
+    url: 'libvirt/domains/' + uuid + '/xml/',
+    params: {
+      token
+    },
+    method: 'get'
+  })
+}
+
 export const getTableData = () => {
   return axios.request({
     url: 'get_table_data',
