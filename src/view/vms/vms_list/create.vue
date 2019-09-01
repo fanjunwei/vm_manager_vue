@@ -31,7 +31,10 @@
         </Select>
       </FormItem>
       <FormItem>
-            <Button @click="handleSubmit" type="primary">提交</Button>
+            <Button @click="handleSubmit" :loading="loading" type="primary">
+              <span v-if="loading">提交...</span>
+              <span v-else>提交</span>
+            </Button>
             <Button @click="handleCancel" style="margin-left: 8px">取消</Button>
         </FormItem>
     </Form>
@@ -46,6 +49,7 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
+      loading: false,
       diskNames: [],
       formItem: {
         name: ''
@@ -59,12 +63,14 @@ export default {
   },
   methods: {
     handleSubmit () {
+      this.loading = true
       this.$refs['formItem'].validate((valid) => {
         if (valid) {
           createVm(this.token, this.formItem).then(res => {
-            console.log(res.data)
+            this.loading = false
             this.$emit('close')
           }, err => {
+            this.loading = false
             this.$Message.error(err.response.data.message)
           })
         }
