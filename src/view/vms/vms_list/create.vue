@@ -63,9 +63,9 @@ export default {
   },
   methods: {
     handleSubmit () {
-      this.loading = true
       this.$refs['formItem'].validate((valid) => {
         if (valid) {
+          this.loading = true
           createVm(this.token, this.formItem).then(res => {
             this.loading = false
             this.$emit('close')
