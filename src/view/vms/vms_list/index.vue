@@ -201,6 +201,7 @@ export default {
     },
     createModalClose () {
       this.showCreateModal = false
+      this.loadData()
     }
   },
   computed: {
