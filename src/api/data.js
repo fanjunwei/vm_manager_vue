@@ -10,6 +10,16 @@ export const getOverview = (token) => {
   })
 }
 
+export const getBaseDisks = (token) => {
+  return axios.request({
+    url: 'libvirt/base_disks/',
+    params: {
+      token
+    },
+    method: 'get'
+  })
+}
+
 export const getVmsList = (token) => {
   return axios.request({
     url: 'libvirt/domains/',
@@ -17,6 +27,17 @@ export const getVmsList = (token) => {
       token
     },
     method: 'get'
+  })
+}
+
+export const createVm = (token, data) => {
+  return axios.request({
+    url: 'libvirt/domains/',
+    params: {
+      token
+    },
+    data: data,
+    method: 'post'
   })
 }
 

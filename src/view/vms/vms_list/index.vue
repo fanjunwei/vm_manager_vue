@@ -4,7 +4,7 @@
 <template>
   <div>
     <div class="table_top">
-      <Button type="primary">新建虚拟机
+      <Button @click="createVm" type="primary">新建虚拟机
         <Icon type="md-add"/>
       </Button>
       <Dropdown @on-click="batchVmActionModel" style="margin-left: 20px">
@@ -23,7 +23,7 @@
       </Dropdown>
     </div>
     <Table :columns="columns" :data="data" :loading="loading" @on-selection-change="tableSelected">
-       <template slot-scope="{ row, index }" slot="name">
+      <template slot-scope="{ row, index }" slot="name">
         <a @click="itemInfo(row)" href="javascirpt:void(0)">{{row.name}}</a>
       </template>
       <template slot-scope="{ row, index }" slot="mem">
@@ -38,7 +38,7 @@
       v-model="showCheckModel"
       :title="CheckModelTitle"
       @on-ok="batchVmAction">
-        <Tag v-for="item in tableSelection" :key="item.uuid" color="primary">{{item.name}}</Tag>
+      <Tag v-for="item in tableSelection" :key="item.uuid" color="primary">{{item.name}}</Tag>
     </Modal>
     <Modal
       :scrollable="true"
@@ -51,6 +51,15 @@
         <p class="pre-line">{{xml}}</p>
       </template>
     </Modal>
+    <Modal
+      :scrollable="true"
+      v-model="showCreateModal"
+      title="创建虚拟机">
+      <template slot="footer">
+        <span></span>
+      </template>
+      <create @close="createModalClose" v-if="showCreateModal"></create>
+    </Modal>
   </div>
 </template>
 
@@ -58,11 +67,13 @@
 import TreeSelect from '_c/tree-select'
 import { getVmsList, vmAction, vmXml } from '@/api/data'
 import { mapState } from 'vuex'
+import Create from './create'
 
 export default {
   name: 'tree_select_page',
   components: {
-    TreeSelect
+    TreeSelect,
+    Create
   },
   data () {
     return {
@@ -70,6 +81,7 @@ export default {
       loading: true,
       showCheckModel: false,
       showXmlModel: false,
+      showCreateModal: false,
       CheckModelTitle: '',
       lastAction: '',
       tableSelection: [],
@@ -112,6 +124,9 @@ export default {
     this.loadData()
   },
   methods: {
+    createVm () {
+      this.showCreateModal = true
+    },
     formatSize (size) {
       const rate = 1024
       if (size === '' || size === undefined) {
@@ -183,6 +198,9 @@ export default {
     },
     tableSelected (selection) {
       this.tableSelection = selection
+    },
+    createModalClose () {
+      this.showCreateModal = false
     }
   },
   computed: {
