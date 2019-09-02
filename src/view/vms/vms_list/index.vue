@@ -4,7 +4,7 @@
 <template>
   <div>
     <div class="table_top">
-      <Button @click="createVm" type="primary">新建虚拟机
+      <Button @click="createVm" type="primary">创建虚拟机
         <Icon type="md-add"/>
       </Button>
       <Dropdown @on-click="batchVmActionModel" style="margin-left: 20px">
