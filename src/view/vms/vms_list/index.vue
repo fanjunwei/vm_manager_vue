@@ -7,7 +7,7 @@
       <Button @click="createVm" type="primary">创建虚拟机
         <Icon type="md-add"/>
       </Button>
-      <Dropdown @on-click="batchVmActionModel" style="margin-left: 20px">
+      <Dropdown @on-click="batchVmActionModel" style="margin-left: 10px">
         <Button type="primary">
           操作
           <Icon type="ios-arrow-down"></Icon>
@@ -21,6 +21,9 @@
           <DropdownItem name="delete" :disabled="noSelected">删除</DropdownItem>
         </DropdownMenu>
       </Dropdown>
+       <Button @click="loadData" type="primary" style="margin-left: 10px">
+         <Icon type="md-refresh" />
+       </Button>
     </div>
     <Table :columns="columns" :data="data" :loading="loading" @on-selection-change="tableSelected">
       <template slot-scope="{ row, index }" slot="name">
@@ -143,8 +146,7 @@ export default {
     loadData () {
       this.loading = true
       getVmsList(this.token).then(res => {
-        const { data } = res
-        this.data = data
+        this.data = res.data
         this.loading = false
       })
     },
