@@ -29,7 +29,7 @@
       <template slot-scope="{ row, index }" slot="name">
         <a @click="itemInfo(row)" href="javascirpt:void(0)">{{row.name}}</a>
       </template>
-      <template slot-scope="{ row, index }" slot="mem">
+      <template slot-scope="{ row, index }" slot="mem_kb">
         <span>{{ formatSize(row.mem_kb*1024) }}</span>
       </template>
       <template slot-scope="{ row, index }" slot="state">
@@ -102,23 +102,31 @@ export default {
         // },
         {
           title: '名称',
-          slot: 'name'
+          slot: 'name',
+          key: 'name',
+          sortable: true
         },
         {
           title: '状态',
-          slot: 'state'
+          slot: 'state',
+          key: 'state',
+          sortable: true
         },
         {
           title: '分配内存',
-          slot: 'mem'
+          slot: 'mem_kb',
+          key: 'mem_kb',
+          sortable: true
         },
         {
           title: '分配CPU(核)',
-          key: 'cpu'
+          key: 'cpu',
+          sortable: true
         },
         {
           title: 'VNC端口',
-          key: 'vnc_port'
+          key: 'vnc_port',
+          sortable: true
         }
       ]
     }
