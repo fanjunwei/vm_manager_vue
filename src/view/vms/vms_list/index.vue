@@ -17,13 +17,14 @@
           <DropdownItem name="shutdown" :disabled="noSelected">关机</DropdownItem>
           <DropdownItem name="reboot" :disabled="noSelected">重启</DropdownItem>
           <DropdownItem name="destroy" :disabled="noSelected">强制关机</DropdownItem>
+          <DropdownItem name="attach-disk" :disabled="noSelectedOne">挂载磁盘</DropdownItem>
           <DropdownItem name="xml" :disabled="noSelectedOne">查看XML</DropdownItem>
           <DropdownItem name="delete" :disabled="noSelected">删除</DropdownItem>
         </DropdownMenu>
       </Dropdown>
-       <Button @click="loadData" type="primary" style="margin-left: 10px">
-         <Icon type="md-refresh" />
-       </Button>
+      <Button @click="loadData" type="primary" style="margin-left: 10px">
+        <Icon type="md-refresh"/>
+      </Button>
     </div>
     <Table :columns="columns" :data="data" :loading="loading" @on-selection-change="tableSelected">
       <template slot-scope="{ row, index }" slot="name">
@@ -63,6 +64,15 @@
       </template>
       <create @close="createModalClose" v-if="showCreateModal"></create>
     </Modal>
+    <Modal
+      :scrollable="true"
+      v-model="showAttachDisk"
+      title="挂载磁盘">
+      <template slot="footer">
+        <span></span>
+      </template>
+      <attach-disk :selectedItem="selectedItem" @close="attachModalModalClose" v-if="showAttachDisk"></attach-disk>
+    </Modal>
   </div>
 </template>
 
@@ -71,12 +81,14 @@ import TreeSelect from '_c/tree-select'
 import { getVmsList, vmAction, vmXml } from '@/api/data'
 import { mapState } from 'vuex'
 import Create from './create'
+import AttachDisk from './attach-disk'
 
 export default {
   name: 'tree_select_page',
   components: {
     TreeSelect,
-    Create
+    Create,
+    AttachDisk
   },
   data () {
     return {
@@ -85,6 +97,7 @@ export default {
       showCheckModel: false,
       showXmlModel: false,
       showCreateModal: false,
+      showAttachDisk: false,
       CheckModelTitle: '',
       lastAction: '',
       tableSelection: [],
@@ -172,18 +185,7 @@ export default {
     },
     batchVmActionModel (action) {
       console.log('batchVmActionModel')
-      if (action !== 'xml') {
-        this.lastAction = action
-        const actionNameMap = {
-          'start': '开机',
-          'shutdown': '关机',
-          'reboot': '重启',
-          'destroy': '强制关机',
-          'delete': '删除'
-        }
-        this.CheckModelTitle = '是否确认要对以下虚拟机执行 "' + actionNameMap[action] + '" 操作'
-        this.showCheckModel = true
-      } else {
+      if (action === 'xml') {
         if (this.tableSelection.length === 1) {
           this.showXmlModel = true
           this.selectedItem = this.tableSelection[0]
@@ -194,6 +196,22 @@ export default {
             this.$Message.error(err.response.data.message)
           })
         }
+      } else if (action === 'attach-disk') {
+        if (this.tableSelection.length === 1) {
+          this.selectedItem = this.tableSelection[0]
+          this.showAttachDisk = true
+        }
+      } else {
+        this.lastAction = action
+        const actionNameMap = {
+          'start': '开机',
+          'shutdown': '关机',
+          'reboot': '重启',
+          'destroy': '强制关机',
+          'delete': '删除'
+        }
+        this.CheckModelTitle = '是否确认要对以下虚拟机执行 "' + actionNameMap[action] + '" 操作'
+        this.showCheckModel = true
       }
     },
     itemInfo (item) {
@@ -211,6 +229,10 @@ export default {
     },
     createModalClose () {
       this.showCreateModal = false
+      this.loadData()
+    },
+    attachModalModalClose () {
+      this.showAttachDisk = false
       this.loadData()
     }
   },

@@ -41,6 +41,17 @@ export const createVm = (token, data) => {
   })
 }
 
+export const attachDisk = (token, uuid, data) => {
+  return axios.request({
+    url: 'libvirt/domains/' + uuid + '/attach_disk/',
+    params: {
+      token
+    },
+    data: data,
+    method: 'post'
+  })
+}
+
 export const vmAction = (token, uuid, action) => {
   return axios.request({
     url: 'libvirt/domains/' + uuid + '/action/',
