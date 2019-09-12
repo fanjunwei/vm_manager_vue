@@ -38,7 +38,7 @@
         <Tag v-else color="default">{{row.state}}</Tag>
       </template>
       <template slot-scope="{ row, index }" slot="disk_dev">
-        <Tag v-for="dev in row.disk_dev" :key="dev" color="default">{{dev}}</Tag>
+        <Tag v-for="disk in row.disks" :key="disk.dev" color="default" :title="disk.file">{{disk.dev}}</Tag>
       </template>
     </Table>
     <Modal
