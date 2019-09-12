@@ -37,6 +37,9 @@
         <Tag v-if="row.state==='running'" color="success">{{row.state}}</Tag>
         <Tag v-else color="default">{{row.state}}</Tag>
       </template>
+      <template slot-scope="{ row, index }" slot="disk_dev">
+        <Tag v-for="dev in row.disk_dev" :key="dev" color="default">{{dev}}</Tag>
+      </template>
     </Table>
     <Modal
       v-model="showCheckModel"
@@ -135,6 +138,10 @@ export default {
           title: '分配CPU(核)',
           key: 'cpu',
           sortable: true
+        },
+        {
+          title: '硬盘',
+          slot: 'disk_dev'
         },
         {
           title: 'VNC端口',
