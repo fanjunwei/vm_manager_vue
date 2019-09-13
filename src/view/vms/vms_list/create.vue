@@ -24,10 +24,10 @@
         </Input>
       </FormItem>
       <FormItem label="创建方式">
-        <i-switch v-model="formItem.is_from_iso" size="large">
-          <span slot="open">ISO</span>
-          <span slot="close">硬盘</span>
-        </i-switch>
+        <RadioGroup v-model="formItem.is_from_iso" type="button">
+          <Radio :label="false">硬盘镜像</Radio>
+          <Radio :label="true">ISO镜像</Radio>
+        </RadioGroup>
       </FormItem>
 
       <div v-if="formItem.is_from_iso">
