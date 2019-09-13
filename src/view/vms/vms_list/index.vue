@@ -18,7 +18,7 @@
           <DropdownItem name="reboot" :disabled="noSelected">重启</DropdownItem>
           <DropdownItem name="destroy" :disabled="noSelected">强制关机</DropdownItem>
           <DropdownItem name="attach-disk" :disabled="noSelectedOne">挂载磁盘</DropdownItem>
-          <DropdownItem name="xml" :disabled="noSelectedOne">查看XML</DropdownItem>
+          <DropdownItem name="xml" :disabled="noSelectedOne">编辑XML</DropdownItem>
           <DropdownItem name="delete" :disabled="noSelected">删除</DropdownItem>
         </DropdownMenu>
       </Dropdown>
@@ -78,7 +78,17 @@
       <template slot="footer">
         <span></span>
       </template>
-      <attach-disk :selectedItem="selectedItem" @close="attachModalModalClose" v-if="showAttachDisk"></attach-disk>
+      <attach-disk :selectedItem="selectedItem" @close="attachDiskModalClose" v-if="showAttachDisk"></attach-disk>
+    </Modal>
+    <Modal
+      :scrollable="true"
+      v-model="showEditXml"
+      :width="800"
+      title="修改XML">
+      <template slot="footer">
+        <span></span>
+      </template>
+      <edit-xml :selectedItem="selectedItem" @close="editXmlModalClose" v-if="showEditXml"></edit-xml>
     </Modal>
   </div>
 </template>
@@ -89,13 +99,15 @@ import { getVmsList, vmAction, vmXml } from '@/api/data'
 import { mapState } from 'vuex'
 import Create from './create'
 import AttachDisk from './attach-disk'
+import EditXml from './edit-xml'
 
 export default {
   name: 'tree_select_page',
   components: {
     TreeSelect,
     Create,
-    AttachDisk
+    AttachDisk,
+    EditXml
   },
   data () {
     return {
@@ -105,6 +117,7 @@ export default {
       showXmlModel: false,
       showCreateModal: false,
       showAttachDisk: false,
+      showEditXml: false,
       CheckModelTitle: '',
       lastAction: '',
       tableSelection: [],
@@ -198,14 +211,12 @@ export default {
       console.log('batchVmActionModel')
       if (action === 'xml') {
         if (this.tableSelection.length === 1) {
-          this.showXmlModel = true
           this.selectedItem = this.tableSelection[0]
-          this.xml = ''
-          vmXml(this.token, this.tableSelection[0].uuid).then(res => {
-            this.xml = res.data.xml
-          }, err => {
-            this.$Message.error(err.response.data.message)
-          })
+          if (this.selectedItem.state === 'shut off') {
+            this.showEditXml = true
+          } else {
+            this.$Message.error('只能修改关键状态的虚拟机')
+          }
         }
       } else if (action === 'attach-disk') {
         if (this.tableSelection.length === 1) {
@@ -242,8 +253,12 @@ export default {
       this.showCreateModal = false
       this.loadData()
     },
-    attachModalModalClose () {
+    attachDiskModalClose () {
       this.showAttachDisk = false
+      this.loadData()
+    },
+    editXmlModalClose () {
+      this.showEditXml = false
       this.loadData()
     }
   },

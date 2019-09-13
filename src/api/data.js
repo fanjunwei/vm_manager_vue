@@ -85,6 +85,17 @@ export const vmXml = (token, uuid) => {
   })
 }
 
+export const updateVmXml = (token, uuid, data) => {
+  return axios.request({
+    url: 'libvirt/domains/' + uuid + '/xml/',
+    params: {
+      token
+    },
+    data: data,
+    method: 'put'
+  })
+}
+
 export const getTableData = () => {
   return axios.request({
     url: 'get_table_data',

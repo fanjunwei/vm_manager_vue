@@ -4,13 +4,9 @@
 <template>
   <div>
     <Form ref="formItem" :model="formItem" :label-width="80">
-      <FormItem label="容量" prop="size" :rules="[
-            {required: true,type: 'number', message: '容量必填,并且为数字,最大1000GB,最小1GB', trigger: 'blur', max:1000, min:1},
-          ]">
-        <Input number v-model="formItem.size">
-          <span slot="append">GB</span>
-        </Input>
-      </FormItem>
+      <FormItem label="XML">
+            <Input v-model="formItem.xml" type="textarea" :autosize="{minRows: 10,maxRows: 20}"></Input>
+        </FormItem>
       <FormItem>
         <Button @click="handleSubmit" :loading="loading" type="primary">
           <span v-if="loading">提交...</span>
@@ -24,7 +20,7 @@
 </template>
 
 <script>
-import { attachDisk } from '@/api/data'
+import { vmXml, updateVmXml } from '@/api/data'
 import { mapState } from 'vuex'
 
 export default {
@@ -34,25 +30,31 @@ export default {
   data () {
     return {
       loading: false,
+      diskNames: [],
       formItem: {
-        size: ''
+        xml: ''
       }
     }
   },
+  mounted () {
+    vmXml(this.token, this.selectedItem.uuid).then(res => {
+      this.formItem.xml = res.data.xml
+    })
+  },
   methods: {
     handleSubmit () {
-      this.$refs['formItem'].validate((valid) => {
-        if (valid) {
-          this.loading = true
-          attachDisk(this.token, this.selectedItem.uuid, this.formItem).then(res => {
-            this.loading = false
-            this.$emit('close')
-          }, err => {
-            this.loading = false
-            this.$Message.error(err.response.data.message)
-          })
-        }
+      // this.$refs['formItem'].validate((valid) => {
+      //   if (valid) {
+      this.loading = true
+      updateVmXml(this.token, this.selectedItem.uuid, this.formItem).then(res => {
+        this.loading = false
+        this.$emit('close')
+      }, err => {
+        this.loading = false
+        this.$Message.error(err.response.data.message)
       })
+      //   }
+      // })
     },
     handleCancel () {
       this.$emit('close')
