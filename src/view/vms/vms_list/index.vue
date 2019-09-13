@@ -39,8 +39,11 @@
       </template>
       <template slot-scope="{ row, index }" slot="disk_dev">
         <span v-for="disk in row.disks" :key="disk.dev">
-           <Tag v-if="disk.device==='disk'" color="primary" :title="disk.file">{{disk.dev}}</Tag>
-           <Tag v-else color="cyan" :title="disk.file">{{disk.dev}}</Tag>
+           <Tag type="border" v-if="disk.device==='disk'" color="primary" :name="disk.dev"
+                :closable="disk.dev!=='vda'&&disk.dev!=='hda'"
+                :title="disk.file" @on-close="handleDetachDisk(row,disk.dev)">{{disk.dev}}</Tag>
+           <Tag type="border" v-else color="cyan" :closable="true" :name="disk.dev" :title="disk.file"
+                @on-close="handleDetachDisk(row,disk.dev)">{{disk.dev}}</Tag>
         </span>
 
       </template>
@@ -95,7 +98,7 @@
 
 <script>
 import TreeSelect from '_c/tree-select'
-import { getVmsList, vmAction, vmXml } from '@/api/data'
+import { getVmsList, vmAction, vmXml, detachDisk } from '@/api/data'
 import { mapState } from 'vuex'
 import Create from './create'
 import AttachDisk from './attach-disk'
@@ -265,6 +268,20 @@ export default {
     editXmlModalClose () {
       this.showEditXml = false
       this.loadData()
+    },
+    handleDetachDisk (item, dev) {
+      this.$Modal.confirm({
+        title: '卸载存储',
+        content: '<p>是否确认卸载"' + dev + '?"</p>',
+        onOk: () => {
+          detachDisk(this.token, item.uuid, dev).then(res => {
+            this.loadData()
+          }, err => {
+            this.$Message.error(err.response.data.message)
+          })
+        }
+
+      })
     }
   },
   computed: {

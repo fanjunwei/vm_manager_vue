@@ -75,6 +75,19 @@ export const vmAction = (token, uuid, action) => {
   })
 }
 
+export const detachDisk = (token, uuid, dev) => {
+  return axios.request({
+    url: 'libvirt/domains/' + uuid + '/detach_disk/',
+    params: {
+      token
+    },
+    data: {
+      dev: dev
+    },
+    method: 'post'
+  })
+}
+
 export const vmXml = (token, uuid) => {
   return axios.request({
     url: 'libvirt/domains/' + uuid + '/xml/',
