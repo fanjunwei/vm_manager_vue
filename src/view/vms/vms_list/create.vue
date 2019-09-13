@@ -9,6 +9,9 @@
           ]">
         <Input v-model="formItem.name" placeholder=""/>
       </FormItem>
+      <FormItem label="描述" prop="description">
+        <Input v-model="formItem.description" placeholder=""/>
+      </FormItem>
       <FormItem label="内存" prop="memory" :rules="[
             {required: true,type: 'number', message: '内存必填,并且为数字,最大64GB,最小1GB', trigger: 'blur', max:64, min:1},
           ]">

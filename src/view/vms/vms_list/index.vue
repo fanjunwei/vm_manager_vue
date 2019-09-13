@@ -140,6 +140,11 @@ export default {
           sortable: true
         },
         {
+          title: '描述',
+          key: 'description',
+          sortable: true
+        },
+        {
           title: '状态',
           slot: 'state',
           key: 'state',
