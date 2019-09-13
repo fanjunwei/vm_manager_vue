@@ -23,27 +23,53 @@
           <span slot="append">核</span>
         </Input>
       </FormItem>
-      <FormItem label="基础镜像" prop="disk_name" :rules="[
+      <FormItem label="创建方式">
+        <i-switch v-model="formItem.is_from_iso" size="large">
+          <span slot="open">ISO</span>
+          <span slot="close">硬盘</span>
+        </i-switch>
+      </FormItem>
+
+      <div v-if="formItem.is_from_iso">
+        <FormItem label="ISO镜像" prop="iso_name" :rules="[
             {required: true, message: '必填'},
           ]">
-        <Select v-model="formItem.disk_name" >
-          <Option v-for="item in diskNames" :value="item" :key="item">{{ item }}</Option>
-        </Select>
-      </FormItem>
-      <FormItem>
-            <Button @click="handleSubmit" :loading="loading" type="primary">
-              <span v-if="loading">提交...</span>
-              <span v-else>提交</span>
-            </Button>
-            <Button @click="handleCancel" style="margin-left: 8px">取消</Button>
+          <Select v-model="formItem.iso_name">
+            <Option v-for="item in isoNames" :value="item" :key="item">{{ item }}</Option>
+          </Select>
         </FormItem>
+        <FormItem label="磁盘大小" prop="disk_size" :rules="[
+            {required: true,type: 'number', message: '磁盘大小必填,并且为数字,最大1000GB,最小1GB', trigger: 'blur', max:1000, min:1},
+          ]">
+          <Input number v-model="formItem.disk_size">
+            <span slot="append">GB</span>
+          </Input>
+        </FormItem>
+      </div>
+      <div v-else>
+        <FormItem label="硬盘镜像" prop="disk_name" :rules="[
+            {required: true, message: '必填'},
+          ]">
+          <Select v-model="formItem.disk_name">
+            <Option v-for="item in diskNames" :value="item" :key="item">{{ item }}</Option>
+          </Select>
+        </FormItem>
+      </div>
+
+      <FormItem>
+        <Button @click="handleSubmit" :loading="loading" type="primary">
+          <span v-if="loading">提交...</span>
+          <span v-else>提交</span>
+        </Button>
+        <Button @click="handleCancel" style="margin-left: 8px">取消</Button>
+      </FormItem>
     </Form>
 
   </div>
 </template>
 
 <script>
-import { getBaseDisks, createVm } from '@/api/data'
+import { getBaseDisks, getIos, createVm } from '@/api/data'
 import { mapState } from 'vuex'
 
 export default {
@@ -51,14 +77,19 @@ export default {
     return {
       loading: false,
       diskNames: [],
+      isoNames: [],
       formItem: {
-        name: ''
+        name: '',
+        is_from_iso: false
       }
     }
   },
   mounted () {
     getBaseDisks(this.token).then(res => {
       this.diskNames = res.data.files
+    })
+    getIos(this.token).then(res => {
+      this.isoNames = res.data.files
     })
   },
   methods: {

@@ -20,6 +20,16 @@ export const getBaseDisks = (token) => {
   })
 }
 
+export const getIos = (token) => {
+  return axios.request({
+    url: 'libvirt/iso/',
+    params: {
+      token
+    },
+    method: 'get'
+  })
+}
+
 export const getVmsList = (token) => {
   return axios.request({
     url: 'libvirt/domains/',
