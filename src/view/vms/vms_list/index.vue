@@ -38,7 +38,11 @@
         <Tag v-else color="default">{{row.state}}</Tag>
       </template>
       <template slot-scope="{ row, index }" slot="disk_dev">
-        <Tag v-for="disk in row.disks" :key="disk.dev" color="default" :title="disk.file">{{disk.dev}}</Tag>
+        <span v-for="disk in row.disks" :key="disk.dev">
+           <Tag v-if="disk.device==='disk'" color="primary" :title="disk.file">{{disk.dev}}</Tag>
+           <Tag v-else color="cyan" :title="disk.file">{{disk.dev}}</Tag>
+        </span>
+
       </template>
     </Table>
     <Modal
@@ -140,7 +144,7 @@ export default {
           sortable: true
         },
         {
-          title: '硬盘',
+          title: '磁盘',
           slot: 'disk_dev'
         },
         {
