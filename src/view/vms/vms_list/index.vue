@@ -144,7 +144,7 @@ export default {
           sortable: true
         },
         {
-          title: '磁盘',
+          title: '存储',
           slot: 'disk_dev'
         },
         {
