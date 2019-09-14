@@ -169,8 +169,9 @@ export default {
           slot: 'disk_dev'
         },
         {
-          title: 'VNC端口',
+          title: 'VNC',
           key: 'vnc_port',
+          width: 100,
           sortable: true
         }
       ]
