@@ -34,10 +34,10 @@
       </FormItem>
 
       <div v-if="formItem.is_from_iso">
-        <FormItem label="ISO镜像" prop="iso_name" :rules="[
-            {required: true, message: '必填'},
+        <FormItem label="ISO镜像" prop="iso_names" :rules="[
+            {required: true,type:'array', message: '必填'},
           ]">
-          <Select v-model="formItem.iso_name">
+          <Select multiple v-model="formItem.iso_names">
             <Option v-for="item in isoNames" :value="item" :key="item">{{ item }}</Option>
           </Select>
         </FormItem>
