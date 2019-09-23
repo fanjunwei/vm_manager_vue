@@ -224,7 +224,7 @@ export default {
           if (this.selectedItem.state === 'shut off') {
             this.showEditXml = true
           } else {
-            this.$Message.error('只能修改关键状态的虚拟机')
+            this.$Message.error('只能修改关机状态的虚拟机')
           }
         }
       } else if (action === 'attach-disk') {
