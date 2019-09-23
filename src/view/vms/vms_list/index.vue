@@ -30,8 +30,11 @@
       <template slot-scope="{ row, index }" slot="name">
         <a @click="itemInfo(row)" href="javascirpt:void(0)">{{row.name}}</a>
       </template>
-      <template slot-scope="{ row, index }" slot="mem_kb">
-        <span>{{ formatSize(row.mem_kb*1024) }}</span>
+      <template slot-scope="{ row, index }" slot="quota">
+        <span>{{row.cpu}}C/{{ formatSize(row.mem_kb*1024) }}</span>
+      </template>
+      <template slot-scope="{ row, index }" slot="ip">
+        <div v-for="ip in row.ipaddrs" :key="ip">{{ip}}</div>
       </template>
       <template slot-scope="{ row, index }" slot="state">
         <Tag v-if="row.state==='running'" color="success">{{row.state}}</Tag>
@@ -154,15 +157,12 @@ export default {
           sortable: true
         },
         {
-          title: '分配内存',
-          slot: 'mem_kb',
-          key: 'mem_kb',
-          sortable: true
+          title: '配额',
+          slot: 'quota'
         },
         {
-          title: '分配CPU(核)',
-          key: 'cpu',
-          sortable: true
+          title: 'IP',
+          slot: 'ip'
         },
         {
           title: '存储',
