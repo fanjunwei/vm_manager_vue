@@ -31,7 +31,7 @@
         <a @click="itemInfo(row)" href="javascirpt:void(0)">{{row.name}}</a>
       </template>
       <template slot-scope="{ row, index }" slot="quota">
-        <span>{{row.cpu}}C/{{ formatSize(row.mem_kb*1024) }}</span>
+        <span>{{row.cpu_core}}C/{{ formatSize(row.mem_size_kb*1024) }}</span>
       </template>
       <template slot-scope="{ row, index }" slot="ip">
         <div v-for="ip in row.ipaddrs" :key="ip">{{ip}}</div>
@@ -111,7 +111,7 @@
 
 <script>
 import TreeSelect from '_c/tree-select'
-import { getVmsList, vmAction, vmXml, detachDisk } from '@/api/data'
+import { getVmsList, vmAction, deleteVm, vmXml, detachDisk } from '@/api/data'
 import { mapState } from 'vuex'
 import Create from './create'
 import AttachDisk from './attach-disk'
@@ -220,12 +220,22 @@ export default {
     },
     batchVmAction () {
       let p = []
-      this.tableSelection.forEach(item => {
-        p.push(vmAction(this.token, item.uuid, this.lastAction).then(res => {
-        }, err => {
-          this.$Message.error(err.response.data.message)
-        }))
-      })
+      if (this.lastAction === 'delete') {
+        this.tableSelection.forEach(item => {
+          p.push(deleteVm(this.token, item.id).then(res => {
+          }, err => {
+            this.$Message.error(err.response.data.message)
+          }))
+        })
+      } else {
+        this.tableSelection.forEach(item => {
+          p.push(vmAction(this.token, item.id, this.lastAction).then(res => {
+          }, err => {
+            this.$Message.error(err.response.data.message)
+          }))
+        })
+      }
+
       Promise.all(p).then(() => {
         this.loadData()
       })

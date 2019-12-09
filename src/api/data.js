@@ -51,6 +51,16 @@ export const createVm = (token, data) => {
   })
 }
 
+export const deleteVm = (token, id) => {
+  return axios.request({
+    url: 'host/host/' + id + '/',
+    params: {
+      token
+    },
+    method: 'delete'
+  })
+}
+
 export const attachDisk = (token, uuid, data) => {
   return axios.request({
     url: 'host/domains/' + uuid + '/attach_disk/',
