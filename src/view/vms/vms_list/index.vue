@@ -34,7 +34,9 @@
         <span>{{row.cpu_core}}C/{{ formatSize(row.mem_size_kb*1024) }}</span>
       </template>
       <template slot-scope="{ row, index }" slot="ip">
-        <div v-for="ip in row.ipaddrs" :key="ip">{{ip}}</div>
+        <div v-if="row.info">
+          <div v-for="ip in row.info.ipaddrs" :key="ip">{{ip}}</div>
+        </div>
       </template>
       <template slot-scope="{ row, index }" slot="state">
         <span v-if="row.info && row.info.state">

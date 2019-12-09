@@ -74,7 +74,7 @@ export const attachDisk = (token, uuid, data) => {
 
 export const vmAction = (token, uuid, action) => {
   return axios.request({
-    url: 'host/domains/' + uuid + '/action/',
+    url: 'host/host/' + uuid + '/action/',
     params: {
       token
     },
