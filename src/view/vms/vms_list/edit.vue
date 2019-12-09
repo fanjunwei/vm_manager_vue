@@ -4,12 +4,13 @@
 <template>
   <div>
     <Form ref="formItem" :model="formItem" :label-width="80">
-      <FormItem label="容量" prop="size" :rules="[
-            {required: true,type: 'number', message: '容量必填,并且为数字,最大1000GB,最小1GB', trigger: 'blur', max:1000, min:1},
+      <FormItem label="名称" prop="name" :rules="[
+            {required: true, message: '名称必填', trigger: 'blur'},
           ]">
-        <Input number v-model="formItem.size">
-          <span slot="append">GB</span>
-        </Input>
+        <Input v-model="formItem.name" placeholder=""/>
+      </FormItem>
+      <FormItem label="描述" prop="desc">
+        <Input v-model="formItem.desc" placeholder=""/>
       </FormItem>
       <FormItem>
         <Button @click="handleSubmit" :loading="loading" type="primary">
@@ -24,7 +25,7 @@
 </template>
 
 <script>
-import { attachDisk } from '@/api/data'
+import { editVm } from '@/api/data'
 import { mapState } from 'vuex'
 
 export default {
@@ -34,17 +35,24 @@ export default {
   data () {
     return {
       loading: false,
+      diskNames: [],
+      isoNames: [],
       formItem: {
-        size: ''
+        name: '',
+        desc: ''
       }
     }
+  },
+  mounted () {
+    this.formItem.name = this.selectedItem.name
+    this.formItem.desc = this.selectedItem.desc
   },
   methods: {
     handleSubmit () {
       this.$refs['formItem'].validate((valid) => {
         if (valid) {
           this.loading = true
-          attachDisk(this.token, this.selectedItem.id, this.formItem).then(res => {
+          editVm(this.token, this.selectedItem.id, this.formItem).then(res => {
             this.loading = false
             this.$emit('close')
           }, err => {

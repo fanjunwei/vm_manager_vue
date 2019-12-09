@@ -50,6 +50,16 @@ export const createVm = (token, data) => {
     method: 'post'
   })
 }
+export const editVm = (token, pk, data) => {
+  return axios.request({
+    url: 'host/host/' + pk + '/',
+    params: {
+      token
+    },
+    data: data,
+    method: 'put'
+  })
+}
 
 export const deleteVm = (token, id) => {
   return axios.request({
@@ -61,9 +71,9 @@ export const deleteVm = (token, id) => {
   })
 }
 
-export const attachDisk = (token, uuid, data) => {
+export const attachDisk = (token, pk, data) => {
   return axios.request({
-    url: 'host/domains/' + uuid + '/attach_disk/',
+    url: 'host/host/' + pk + '/attach_disk/',
     params: {
       token
     },

@@ -13,12 +13,14 @@
           <Icon type="ios-arrow-down"></Icon>
         </Button>
         <DropdownMenu slot="list">
+          <DropdownItem name="edit" :disabled="noSelectedOne">编辑</DropdownItem>
           <DropdownItem name="start" :disabled="noSelected">开机</DropdownItem>
           <DropdownItem name="shutdown" :disabled="noSelected">关机</DropdownItem>
           <DropdownItem name="reboot" :disabled="noSelected">重启</DropdownItem>
           <DropdownItem name="destroy" :disabled="noSelected">强制关机</DropdownItem>
           <DropdownItem name="attach-disk" :disabled="noSelectedOne">挂载磁盘</DropdownItem>
-          <DropdownItem name="xml" :disabled="noSelectedOne">编辑XML</DropdownItem>
+          <!--          <DropdownItem name="xml" :disabled="noSelectedOne">编辑XML</DropdownItem>-->
+          <DropdownItem name="sync" :disabled="noSelectedOne">同步XML配置</DropdownItem>
           <DropdownItem name="delete" :disabled="noSelected">删除</DropdownItem>
         </DropdownMenu>
       </Dropdown>
@@ -100,6 +102,15 @@
     </Modal>
     <Modal
       :scrollable="true"
+      v-model="showEdit"
+      title="编辑虚拟机">
+      <template slot="footer">
+        <span></span>
+      </template>
+      <edit :selectedItem="selectedItem" @close="editModalClose" v-if="showEdit"></edit>
+    </Modal>
+    <Modal
+      :scrollable="true"
       v-model="showEditXml"
       :width="800"
       title="修改XML">
@@ -113,9 +124,10 @@
 
 <script>
 import TreeSelect from '_c/tree-select'
-import { getVmsList, vmAction, deleteVm, vmXml, detachDisk } from '@/api/data'
+import { getVmsList, vmAction, deleteVm, detachDisk } from '@/api/data'
 import { mapState } from 'vuex'
 import Create from './create'
+import Edit from './edit'
 import AttachDisk from './attach-disk'
 import EditXml from './edit-xml'
 
@@ -124,6 +136,7 @@ export default {
   components: {
     TreeSelect,
     Create,
+    Edit,
     AttachDisk,
     EditXml
   },
@@ -136,6 +149,7 @@ export default {
       showCreateModal: false,
       showAttachDisk: false,
       showEditXml: false,
+      showEdit: false,
       CheckModelTitle: '',
       lastAction: '',
       tableSelection: [],
@@ -243,7 +257,6 @@ export default {
       })
     },
     batchVmActionModel (action) {
-      console.log('batchVmActionModel')
       if (action === 'xml') {
         if (this.tableSelection.length === 1) {
           this.selectedItem = this.tableSelection[0]
@@ -252,6 +265,11 @@ export default {
           } else {
             this.$Message.error('只能修改关机状态的虚拟机')
           }
+        }
+      } else if (action === 'edit') {
+        if (this.tableSelection.length === 1) {
+          this.selectedItem = this.tableSelection[0]
+          this.showEdit = true
         }
       } else if (action === 'attach-disk') {
         if (this.tableSelection.length === 1) {
@@ -265,7 +283,8 @@ export default {
           'shutdown': '关机',
           'reboot': '重启',
           'destroy': '强制关机',
-          'delete': '删除'
+          'delete': '删除',
+          'sync': '同步XML配置'
         }
         this.CheckModelTitle = '是否确认要对以下虚拟机执行 "' + actionNameMap[action] + '" 操作'
         this.showCheckModel = true
@@ -274,18 +293,22 @@ export default {
     itemInfo (item) {
       this.selectedItem = item
       this.showXmlModel = true
-      this.xml = ''
-      vmXml(this.token, item.uuid).then(res => {
-        this.xml = res.data.xml
-      }, err => {
-        this.$Message.error(err.response.data.message)
-      })
+      this.xml = item.xml
+      // vmXml(this.token, item.uuid).then(res => {
+      //   this.xml = res.data.xml
+      // }, err => {
+      //   this.$Message.error(err.response.data.message)
+      // })
     },
     tableSelected (selection) {
       this.tableSelection = selection
     },
     createModalClose () {
       this.showCreateModal = false
+      this.loadData()
+    },
+    editModalClose () {
+      this.showEdit = false
       this.loadData()
     },
     attachDiskModalClose () {
