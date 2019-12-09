@@ -37,8 +37,10 @@
         <div v-for="ip in row.ipaddrs" :key="ip">{{ip}}</div>
       </template>
       <template slot-scope="{ row, index }" slot="state">
-        <Tag v-if="row.state==='running'" color="success">{{row.state}}</Tag>
-        <Tag v-else color="default">{{row.state}}</Tag>
+        <span v-if="row.info && row.info.state">
+           <Tag v-if="row.info.state==='running'" color="success">{{row.info.state}}</Tag>
+        <Tag v-else color="default">{{row.info.state}}</Tag>
+        </span>
       </template>
       <template slot-scope="{ row, index }" slot="disk_dev">
         <span v-for="disk in row.disks" :key="disk.dev">
@@ -48,7 +50,15 @@
            <Tag type="border" v-else color="cyan" :closable="true" :name="disk.dev" :title="disk.file"
                 @on-close="handleDetachDisk(row,disk.dev)">{{disk.dev}}</Tag>
         </span>
-
+      </template>
+      <template slot-scope="{ row, index }" slot="task">
+        <div v-if="row.last_task">
+          <div :class="{'error-message':row.last_task.state==='FAILURE'}">
+            {{row.last_task.name}}
+            <span v-if="row.last_task.state==='FAILURE'">{{row.last_task.result}}</span>
+            <span v-else>...</span>
+          </div>
+        </div>
       </template>
     </Table>
     <Modal
@@ -147,7 +157,7 @@ export default {
         },
         {
           title: '描述',
-          key: 'description',
+          key: 'desc',
           sortable: true
         },
         {
@@ -173,6 +183,10 @@ export default {
           key: 'vnc_port',
           width: 100,
           sortable: true
+        },
+        {
+          title: '任务',
+          slot: 'task'
         }
       ]
     }

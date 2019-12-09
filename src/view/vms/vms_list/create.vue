@@ -9,20 +9,20 @@
           ]">
         <Input v-model="formItem.name" placeholder=""/>
       </FormItem>
-      <FormItem label="描述" prop="description">
-        <Input v-model="formItem.description" placeholder=""/>
+      <FormItem label="描述" prop="desc">
+        <Input v-model="formItem.desc" placeholder=""/>
       </FormItem>
-      <FormItem label="内存" prop="memory" :rules="[
+      <FormItem label="内存" prop="mem_size_gb" :rules="[
             {required: true,type: 'number', message: '内存必填,并且为数字,最大64GB,最小1GB', trigger: 'blur', max:64, min:1},
           ]">
-        <Input number v-model="formItem.memory">
+        <Input number v-model="formItem.mem_size_gb">
           <span slot="append">GB</span>
         </Input>
       </FormItem>
-      <FormItem label="CPU" prop="cpu" :rules="[
+      <FormItem label="CPU" prop="cpu_core" :rules="[
             {required: true,type: 'integer', message: 'CPU必填,并且为整数,最大10,最小1', trigger: 'blur', max:64, min:1},
           ]">
-        <Input number v-model="formItem.cpu">
+        <Input number v-model="formItem.cpu_core">
           <span slot="append">核</span>
         </Input>
       </FormItem>
@@ -41,19 +41,19 @@
             <Option v-for="item in isoNames" :value="item" :key="item">{{ item }}</Option>
           </Select>
         </FormItem>
-        <FormItem label="磁盘大小" prop="disk_size" :rules="[
+        <FormItem label="磁盘大小" prop="init_disk_size_gb" :rules="[
             {required: true,type: 'number', message: '磁盘大小必填,并且为数字,最大1000GB,最小1GB', trigger: 'blur', max:1000, min:1},
           ]">
-          <Input number v-model="formItem.disk_size">
+          <Input number v-model="formItem.init_disk_size_gb">
             <span slot="append">GB</span>
           </Input>
         </FormItem>
       </div>
       <div v-else>
-        <FormItem label="硬盘镜像" prop="disk_name" :rules="[
+        <FormItem label="硬盘镜像" prop="base_disk_name" :rules="[
             {required: true, message: '必填'},
           ]">
-          <Select v-model="formItem.disk_name">
+          <Select v-model="formItem.base_disk_name">
             <Option v-for="item in diskNames" :value="item" :key="item">{{ item }}</Option>
           </Select>
         </FormItem>
@@ -83,7 +83,8 @@ export default {
       isoNames: [],
       formItem: {
         name: '',
-        is_from_iso: false
+        is_from_iso: false,
+        mem_size_gb: null
       }
     }
   },
@@ -100,6 +101,7 @@ export default {
       this.$refs['formItem'].validate((valid) => {
         if (valid) {
           this.loading = true
+          this.formItem.mem_size_kb = this.formItem.mem_size_gb * 1024 * 1024
           createVm(this.token, this.formItem).then(res => {
             this.loading = false
             this.$emit('close')

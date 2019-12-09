@@ -2,7 +2,7 @@ import axios from '@/libs/api.request'
 
 export const getOverview = (token) => {
   return axios.request({
-    url: 'libvirt/overview/',
+    url: 'host/overview/',
     params: {
       token
     },
@@ -12,7 +12,7 @@ export const getOverview = (token) => {
 
 export const getBaseDisks = (token) => {
   return axios.request({
-    url: 'libvirt/base_disks/',
+    url: 'host/base_disks/',
     params: {
       token
     },
@@ -22,7 +22,7 @@ export const getBaseDisks = (token) => {
 
 export const getIos = (token) => {
   return axios.request({
-    url: 'libvirt/iso/',
+    url: 'host/iso/',
     params: {
       token
     },
@@ -32,7 +32,7 @@ export const getIos = (token) => {
 
 export const getVmsList = (token) => {
   return axios.request({
-    url: 'libvirt/domains/',
+    url: 'host/host/',
     params: {
       token
     },
@@ -42,7 +42,7 @@ export const getVmsList = (token) => {
 
 export const createVm = (token, data) => {
   return axios.request({
-    url: 'libvirt/domains/',
+    url: 'host/host/',
     params: {
       token
     },
@@ -53,7 +53,7 @@ export const createVm = (token, data) => {
 
 export const attachDisk = (token, uuid, data) => {
   return axios.request({
-    url: 'libvirt/domains/' + uuid + '/attach_disk/',
+    url: 'host/domains/' + uuid + '/attach_disk/',
     params: {
       token
     },
@@ -64,7 +64,7 @@ export const attachDisk = (token, uuid, data) => {
 
 export const vmAction = (token, uuid, action) => {
   return axios.request({
-    url: 'libvirt/domains/' + uuid + '/action/',
+    url: 'host/domains/' + uuid + '/action/',
     params: {
       token
     },
@@ -77,7 +77,7 @@ export const vmAction = (token, uuid, action) => {
 
 export const detachDisk = (token, uuid, dev) => {
   return axios.request({
-    url: 'libvirt/domains/' + uuid + '/detach_disk/',
+    url: 'host/domains/' + uuid + '/detach_disk/',
     params: {
       token
     },
@@ -90,7 +90,7 @@ export const detachDisk = (token, uuid, dev) => {
 
 export const vmXml = (token, uuid) => {
   return axios.request({
-    url: 'libvirt/domains/' + uuid + '/xml/',
+    url: 'host/domains/' + uuid + '/xml/',
     params: {
       token
     },
@@ -100,7 +100,7 @@ export const vmXml = (token, uuid) => {
 
 export const updateVmXml = (token, uuid, data) => {
   return axios.request({
-    url: 'libvirt/domains/' + uuid + '/xml/',
+    url: 'host/domains/' + uuid + '/xml/',
     params: {
       token
     },
