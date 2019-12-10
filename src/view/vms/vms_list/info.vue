@@ -23,7 +23,7 @@
         </div>
         <Table :columns="columns" :data="snapData" :loading="loading" @on-selection-change="tableSelected">
           <template slot-scope="{ row, index }" slot="op">
-            <Button type="text">恢复</Button>
+            <Button type="text" @click="handleRevertSnap(row)">恢复</Button>
             <Button type="text">删除</Button>
           </template>
         </Table>
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { getSnaps, createSnaps } from '@/api/data'
+import { getSnaps, createSnaps, revertSnaps } from '@/api/data'
 import { mapState } from 'vuex'
 
 export default {
@@ -63,10 +63,10 @@ export default {
           title: '状态',
           key: 'state'
         },
-        // {
-        //   title: '父级快照',
-        //   key: 'parent'
-        // },
+        {
+          title: '父级快照',
+          key: 'parent'
+        },
         {
           title: '创建时间',
           key: 'create_time'
@@ -95,11 +95,17 @@ export default {
           createSnaps(this.token, this.hostData.id, this.snapForm.name).then(res => {
             this.snapForm.name = ''
             this.loadSnapData()
-            this.$Message.info('创建成功')
           }, err => {
             this.$Message.error(err.response.data.message)
           })
         }
+      })
+    },
+    handleRevertSnap (item) {
+      revertSnaps(this.token, this.hostData.id, item.id).then(res => {
+        this.$Message.info('开始恢复')
+      }, err => {
+        this.$Message.error(err.response.data.message)
       })
     },
     deleteSnap () {

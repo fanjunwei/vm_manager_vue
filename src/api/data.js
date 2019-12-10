@@ -42,6 +42,18 @@ export const createSnaps = (token, host_id, name) => {
     method: 'post'
   })
 }
+export const revertSnaps = (token, host_id, snap_id) => {
+  return axios.request({
+    url: `host/host/${host_id}/snapshot/${snap_id}/revert/`,
+    params: {
+      token
+    },
+    data: {
+      name: name
+    },
+    method: 'post'
+  })
+}
 
 export const getIos = (token) => {
   return axios.request({
