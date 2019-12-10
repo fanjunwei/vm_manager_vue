@@ -95,15 +95,13 @@ export const vmAction = (token, uuid, action) => {
   })
 }
 
-export const detachDisk = (token, uuid, dev) => {
+export const detachDisk = (token, pk, disk_id) => {
   return axios.request({
-    url: 'host/domains/' + uuid + '/detach_disk/',
+    url: 'host/host/' + pk + '/disk/' + disk_id + '/detach/',
     params: {
       token
     },
-    data: {
-      dev: dev
-    },
+    data: {},
     method: 'post'
   })
 }

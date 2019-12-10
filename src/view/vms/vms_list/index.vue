@@ -50,9 +50,9 @@
         <span v-for="disk in row.disks" :key="disk.dev">
            <Tag type="border" v-if="disk.device==='disk'" color="primary" :name="disk.dev"
                 :closable="disk.dev!=='vda'&&disk.dev!=='hda'"
-                :title="disk.file" @on-close="handleDetachDisk(row,disk.dev)">{{disk.dev}}</Tag>
+                :title="disk.file" @on-close="handleDetachDisk(row,disk)">{{disk.dev}}</Tag>
            <Tag type="border" v-else color="cyan" :closable="true" :name="disk.dev" :title="disk.file"
-                @on-close="handleDetachDisk(row,disk.dev)">{{disk.dev}}</Tag>
+                @on-close="handleDetachDisk(row,disk)">{{disk.dev}}</Tag>
         </span>
       </template>
       <template slot-scope="{ row, index }" slot="task">
@@ -319,12 +319,12 @@ export default {
       this.showEditXml = false
       this.loadData()
     },
-    handleDetachDisk (item, dev) {
+    handleDetachDisk (item, disk) {
       this.$Modal.confirm({
         title: '卸载存储',
-        content: '<p>是否确认卸载"' + dev + '?"</p>',
+        content: '<p>是否确认卸载"' + disk.dev + '?"</p>',
         onOk: () => {
-          detachDisk(this.token, item.uuid, dev).then(res => {
+          detachDisk(this.token, item.id, disk.id).then(res => {
             this.loadData()
           }, err => {
             this.$Message.error(err.response.data.message)
