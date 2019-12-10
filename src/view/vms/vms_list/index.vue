@@ -13,11 +13,12 @@
           <Icon type="ios-arrow-down"></Icon>
         </Button>
         <DropdownMenu slot="list">
-          <DropdownItem name="edit" :disabled="noSelectedOne">编辑</DropdownItem>
           <DropdownItem name="start" :disabled="noSelected">开机</DropdownItem>
           <DropdownItem name="shutdown" :disabled="noSelected">关机</DropdownItem>
           <DropdownItem name="reboot" :disabled="noSelected">重启</DropdownItem>
           <DropdownItem name="destroy" :disabled="noSelected">强制关机</DropdownItem>
+          <DropdownItem name="edit" :disabled="noSelectedOne">编辑</DropdownItem>
+          <DropdownItem name="edit-quota" :disabled="noSelectedOne">修改配额</DropdownItem>
           <DropdownItem name="attach-disk" :disabled="noSelectedOne">挂载磁盘</DropdownItem>
           <!--          <DropdownItem name="xml" :disabled="noSelectedOne">编辑XML</DropdownItem>-->
           <DropdownItem name="sync" :disabled="noSelectedOne">同步XML配置</DropdownItem>
@@ -111,6 +112,15 @@
     </Modal>
     <Modal
       :scrollable="true"
+      v-model="showEditQuota"
+      :title="'修改'+(selectedItem&&selectedItem.name)+'配额'">
+      <template slot="footer">
+        <span></span>
+      </template>
+      <edit-quota :selectedItem="selectedItem" @close="editQuotaModalClose" v-if="showEditQuota"></edit-quota>
+    </Modal>
+    <Modal
+      :scrollable="true"
       v-model="showEditXml"
       :width="800"
       title="修改XML">
@@ -128,6 +138,7 @@ import { getVmsList, vmAction, deleteVm, detachDisk } from '@/api/data'
 import { mapState } from 'vuex'
 import Create from './create'
 import Edit from './edit'
+import EditQuota from './edit-quota'
 import AttachDisk from './attach-disk'
 import EditXml from './edit-xml'
 
@@ -137,6 +148,7 @@ export default {
     TreeSelect,
     Create,
     Edit,
+    EditQuota,
     AttachDisk,
     EditXml
   },
@@ -150,6 +162,7 @@ export default {
       showAttachDisk: false,
       showEditXml: false,
       showEdit: false,
+      showEditQuota: false,
       CheckModelTitle: '',
       lastAction: '',
       tableSelection: [],
@@ -271,6 +284,11 @@ export default {
           this.selectedItem = this.tableSelection[0]
           this.showEdit = true
         }
+      } else if (action === 'edit-quota') {
+        if (this.tableSelection.length === 1) {
+          this.selectedItem = this.tableSelection[0]
+          this.showEditQuota = true
+        }
       } else if (action === 'attach-disk') {
         if (this.tableSelection.length === 1) {
           this.selectedItem = this.tableSelection[0]
@@ -309,6 +327,10 @@ export default {
     },
     editModalClose () {
       this.showEdit = false
+      this.loadData()
+    },
+    editQuotaModalClose () {
+      this.showEditQuota = false
       this.loadData()
     },
     attachDiskModalClose () {
