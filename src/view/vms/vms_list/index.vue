@@ -84,16 +84,14 @@
       @on-ok="batchVmAction">
       <Tag v-for="item in tableSelection" :key="item.uuid" color="primary">{{item.name}}</Tag>
     </Modal>
-    <Modal
+    <Modal :width="700"
       :scrollable="true"
-      v-model="showXmlModel"
+      v-model="showInfoModel"
       :title="selectedOneTitle">
       <template slot="footer">
         <span></span>
       </template>
-      <template>
-        <p class="pre-line">{{xml}}</p>
-      </template>
+      <info :host-data="selectedItem" @close="infoClose" v-if="showInfoModel"></info>
     </Modal>
     <Modal
       :scrollable="true"
@@ -120,7 +118,8 @@
       <template slot="footer">
         <span></span>
       </template>
-      <save-disk :selected-item="selectedItem" :selected-disk="selectedDisk" @close="saveDiskModalClose" v-if="showSaveDisk"></save-disk>
+      <save-disk :selected-item="selectedItem" :selected-disk="selectedDisk" @close="saveDiskModalClose"
+                 v-if="showSaveDisk"></save-disk>
     </Modal>
     <Modal
       :scrollable="true"
@@ -163,6 +162,7 @@ import EditQuota from './edit-quota'
 import AttachDisk from './attach-disk'
 import SaveDisk from './save-disk'
 import EditXml from './edit-xml'
+import Info from './info'
 
 export default {
   name: 'tree_select_page',
@@ -173,14 +173,15 @@ export default {
     EditQuota,
     AttachDisk,
     SaveDisk,
-    EditXml
+    EditXml,
+    Info
   },
   data () {
     return {
       data: [],
       loading: true,
       showCheckModel: false,
-      showXmlModel: false,
+      showInfoModel: false,
       showCreateModal: false,
       showAttachDisk: false,
       showSaveDisk: false,
@@ -335,8 +336,7 @@ export default {
     },
     itemInfo (item) {
       this.selectedItem = item
-      this.showXmlModel = true
-      this.xml = item.xml
+      this.showInfoModel = true
       // vmXml(this.token, item.uuid).then(res => {
       //   this.xml = res.data.xml
       // }, err => {
@@ -348,6 +348,10 @@ export default {
     },
     createModalClose () {
       this.showCreateModal = false
+      this.loadData()
+    },
+    infoClose () {
+      this.showInfoModel = false
       this.loadData()
     },
     editModalClose () {

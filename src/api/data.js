@@ -20,6 +20,29 @@ export const getBaseDisks = (token) => {
   })
 }
 
+export const getSnaps = (token, host_id) => {
+  return axios.request({
+    url: `host/host/${host_id}/snapshot/`,
+    params: {
+      token
+    },
+    method: 'get'
+  })
+}
+
+export const createSnaps = (token, host_id, name) => {
+  return axios.request({
+    url: `host/host/${host_id}/snapshot/`,
+    params: {
+      token
+    },
+    data: {
+      name: name
+    },
+    method: 'post'
+  })
+}
+
 export const getIos = (token) => {
   return axios.request({
     url: 'host/iso/',
