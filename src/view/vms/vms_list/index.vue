@@ -52,14 +52,15 @@
           <Poptip>
           <template>
             <span style="padding: 2px">
-                  <Button size="small" v-if="disk.device==='disk'" type="primary" :title="disk.file">{{disk.dev}}</Button>
+                  <Button size="small" v-if="disk.device==='disk'" type="primary"
+                          :title="disk.file">{{disk.dev}}</Button>
               <Button size="small" v-else type="info">{{disk.dev}}</Button>
             </span>
 
           </template>
           <div class="api" slot="content">
             <ButtonGroup>
-                <Button size="small">保存为基础镜像</Button>
+                <Button size="small" v-if="disk.device==='disk'" @click="handleSaveDisk(row,disk)">保存为基础镜像</Button>
                 <Button size="small" v-if="disk.dev!=='vda'" @click="handleDetachDisk(row,disk)">解除挂载</Button>
             </ButtonGroup>
         </div>
@@ -114,6 +115,15 @@
     </Modal>
     <Modal
       :scrollable="true"
+      v-model="showSaveDisk"
+      title="保存磁盘">
+      <template slot="footer">
+        <span></span>
+      </template>
+      <save-disk :selected-item="selectedItem" :selected-disk="selectedDisk" @close="saveDiskModalClose" v-if="showSaveDisk"></save-disk>
+    </Modal>
+    <Modal
+      :scrollable="true"
       v-model="showEdit"
       title="编辑虚拟机">
       <template slot="footer">
@@ -151,6 +161,7 @@ import Create from './create'
 import Edit from './edit'
 import EditQuota from './edit-quota'
 import AttachDisk from './attach-disk'
+import SaveDisk from './save-disk'
 import EditXml from './edit-xml'
 
 export default {
@@ -161,6 +172,7 @@ export default {
     Edit,
     EditQuota,
     AttachDisk,
+    SaveDisk,
     EditXml
   },
   data () {
@@ -171,6 +183,7 @@ export default {
       showXmlModel: false,
       showCreateModal: false,
       showAttachDisk: false,
+      showSaveDisk: false,
       showEditXml: false,
       showEdit: false,
       showEditQuota: false,
@@ -178,6 +191,7 @@ export default {
       lastAction: '',
       tableSelection: [],
       selectedItem: null,
+      selectedDisk: null,
       xml: '',
       columns: [
         {
@@ -348,6 +362,10 @@ export default {
       this.showAttachDisk = false
       this.loadData()
     },
+    saveDiskModalClose () {
+      this.showSaveDisk = false
+      this.loadData()
+    },
     editXmlModalClose () {
       this.showEditXml = false
       this.loadData()
@@ -365,6 +383,11 @@ export default {
         }
 
       })
+    },
+    handleSaveDisk (item, disk) {
+      this.selectedItem = item
+      this.selectedDisk = disk
+      this.showSaveDisk = true
     }
   },
   computed: {

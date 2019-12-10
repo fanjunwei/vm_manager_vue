@@ -82,6 +82,17 @@ export const attachDisk = (token, pk, data) => {
   })
 }
 
+export const saveDisk = (token, pk, disk_id, name) => {
+  return axios.request({
+    url: `host/host/${pk}/disk/${disk_id}/save/`,
+    params: {
+      token
+    },
+    data: { 'name': name },
+    method: 'post'
+  })
+}
+
 export const vmAction = (token, uuid, action) => {
   return axios.request({
     url: 'host/host/' + uuid + '/action/',
