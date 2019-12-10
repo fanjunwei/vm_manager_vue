@@ -17,12 +17,12 @@
           <DropdownItem name="shutdown" :disabled="noSelected">关机</DropdownItem>
           <DropdownItem name="reboot" :disabled="noSelected">重启</DropdownItem>
           <DropdownItem name="destroy" :disabled="noSelected">强制关机</DropdownItem>
-          <DropdownItem name="edit" :disabled="noSelectedOne">编辑</DropdownItem>
+          <DropdownItem name="edit" :disabled="noSelectedOne" divided>编辑</DropdownItem>
           <DropdownItem name="edit-quota" :disabled="noSelectedOne">修改配额</DropdownItem>
-          <DropdownItem name="attach-disk" :disabled="noSelectedOne">挂载磁盘</DropdownItem>
+          <DropdownItem name="attach-disk" :disabled="noSelectedOne" divided>挂载磁盘</DropdownItem>
           <!--          <DropdownItem name="xml" :disabled="noSelectedOne">编辑XML</DropdownItem>-->
           <DropdownItem name="sync" :disabled="noSelectedOne">同步XML配置</DropdownItem>
-          <DropdownItem name="delete" :disabled="noSelected">删除</DropdownItem>
+          <DropdownItem name="delete" :disabled="noSelected" divided>删除</DropdownItem>
         </DropdownMenu>
       </Dropdown>
       <Button @click="loadData" type="primary" style="margin-left: 10px">
@@ -49,11 +49,22 @@
       </template>
       <template slot-scope="{ row, index }" slot="disk_dev">
         <span v-for="disk in row.disks" :key="disk.dev">
-           <Tag type="border" v-if="disk.device==='disk'" color="primary" :name="disk.dev"
-                :closable="disk.dev!=='vda'&&disk.dev!=='hda'"
-                :title="disk.file" @on-close="handleDetachDisk(row,disk)">{{disk.dev}}</Tag>
-           <Tag type="border" v-else color="cyan" :closable="true" :name="disk.dev" :title="disk.file"
-                @on-close="handleDetachDisk(row,disk)">{{disk.dev}}</Tag>
+          <Poptip>
+          <template>
+            <span style="padding: 2px">
+                  <Button size="small" v-if="disk.device==='disk'" type="primary" :title="disk.file">{{disk.dev}}</Button>
+              <Button size="small" v-else type="info">{{disk.dev}}</Button>
+            </span>
+
+          </template>
+          <div class="api" slot="content">
+            <ButtonGroup>
+                <Button size="small">保存为基础镜像</Button>
+                <Button size="small" v-if="disk.dev!=='vda'" @click="handleDetachDisk(row,disk)">解除挂载</Button>
+            </ButtonGroup>
+        </div>
+    </Poptip>
+
         </span>
       </template>
       <template slot-scope="{ row, index }" slot="task">
