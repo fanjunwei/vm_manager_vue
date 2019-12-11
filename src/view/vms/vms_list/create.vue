@@ -29,7 +29,7 @@
       <FormItem label="网络" prop="network_names" :rules="[
             {required: true,type:'array', message: '必填'},
           ]">
-        <Select multiple v-model="formItem.network_names">
+        <Select multiple v-model="formItem.network_names" :filterable="true">
           <Option v-for="item in networkNames" :value="item" :key="item">{{ item }}</Option>
         </Select>
       </FormItem>
@@ -44,7 +44,7 @@
         <FormItem label="ISO镜像" prop="iso_names" :rules="[
             {required: true,type:'array', message: '必填'},
           ]">
-          <Select multiple v-model="formItem.iso_names">
+          <Select multiple v-model="formItem.iso_names" :filterable="true">
             <Option v-for="item in isoNames" :value="item" :key="item">{{ item }}</Option>
           </Select>
         </FormItem>
@@ -60,7 +60,7 @@
         <FormItem label="硬盘镜像" prop="base_disk_name" :rules="[
             {required: true, message: '必填'},
           ]">
-          <Select v-model="formItem.base_disk_name">
+          <Select v-model="formItem.base_disk_name" :filterable="true">
             <Option v-for="item in diskNames" :value="item" :key="item">{{ item }}</Option>
           </Select>
         </FormItem>

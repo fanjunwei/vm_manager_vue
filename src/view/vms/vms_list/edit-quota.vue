@@ -22,7 +22,7 @@
       <FormItem label="网络" prop="network_names" :rules="[
             {required: true,type:'array', message: '必填'},
           ]">
-        <Select multiple v-model="formItem.network_names">
+        <Select multiple v-model="formItem.network_names" :filterable="true">
           <Option v-for="item in networkNames" :value="item" :key="item">{{ item }}</Option>
         </Select>
       </FormItem>
