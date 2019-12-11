@@ -24,7 +24,16 @@
         <Table :columns="columns" :data="snapData" :loading="loading" @on-selection-change="tableSelected">
           <template slot-scope="{ row, index }" slot="op">
             <Button type="text" @click="handleRevertSnap(row)">恢复</Button>
-            <Button type="text">删除</Button>
+            <Button type="text" @click="handleDeleteSnap(row)">删除</Button>
+          </template>
+          <template slot-scope="{ row, index }" slot="task">
+            <div v-if="row.last_task">
+              <div :class="{'error-message':row.last_task.state==='FAILURE'}">
+                {{row.last_task.name}}
+                <span v-if="row.last_task.state==='FAILURE'">{{row.last_task.result}}</span>
+                <span v-else>...</span>
+              </div>
+            </div>
           </template>
         </Table>
       </TabPane>
@@ -36,7 +45,7 @@
 </template>
 
 <script>
-import { getSnaps, createSnaps, revertSnaps } from '@/api/data'
+import { getSnaps, createSnaps, revertSnaps, deleteSnap } from '@/api/data'
 import { mapState } from 'vuex'
 
 export default {
@@ -72,6 +81,10 @@ export default {
           key: 'create_time'
         },
         {
+          title: '任务',
+          slot: 'task'
+        },
+        {
           title: '操作',
           slot: 'op'
         }
@@ -103,16 +116,21 @@ export default {
     },
     handleRevertSnap (item) {
       revertSnaps(this.token, this.hostData.id, item.id).then(res => {
+        this.$emit('close')
         this.$Message.info('开始恢复')
       }, err => {
         this.$Message.error(err.response.data.message)
       })
     },
-    deleteSnap () {
-
-    },
     tableSelected (selection) {
       this.tableSelection = selection
+    },
+    handleDeleteSnap (item) {
+      deleteSnap(this.token, this.hostData.id, item.id).then(res => {
+        this.loadSnapData()
+      }, err => {
+        this.$Message.error(err.response.data.message)
+      })
     },
     handleSubmit () {
       this.$refs['formItem'].validate((valid) => {

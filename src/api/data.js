@@ -55,6 +55,16 @@ export const revertSnaps = (token, host_id, snap_id) => {
   })
 }
 
+export const deleteSnap = (token, host_id, snap_id) => {
+  return axios.request({
+    url: `host/host/${host_id}/snapshot/${snap_id}/`,
+    params: {
+      token
+    },
+    method: 'delete'
+  })
+}
+
 export const getIos = (token) => {
   return axios.request({
     url: 'host/iso/',

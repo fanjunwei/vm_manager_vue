@@ -84,7 +84,7 @@
       @on-ok="batchVmAction">
       <Tag v-for="item in tableSelection" :key="item.uuid" color="primary">{{item.name}}</Tag>
     </Modal>
-    <Modal :width="700"
+    <Modal :width="900"
       :scrollable="true"
       v-model="showInfoModel"
       :title="selectedOneTitle">
