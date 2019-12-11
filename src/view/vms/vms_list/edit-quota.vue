@@ -19,6 +19,13 @@
           <span slot="append">核</span>
         </Input>
       </FormItem>
+      <FormItem label="网络" prop="network_names" :rules="[
+            {required: true,type:'array', message: '必填'},
+          ]">
+        <Select multiple v-model="formItem.network_names">
+          <Option v-for="item in networkNames" :value="item" :key="item">{{ item }}</Option>
+        </Select>
+      </FormItem>
       <FormItem>
         <Button @click="handleSubmit" :loading="loading" type="primary">
           <span v-if="loading">提交...</span>
@@ -32,7 +39,7 @@
 </template>
 
 <script>
-import { editVm } from '@/api/data'
+import { editVm, getNetworkNames } from '@/api/data'
 import { mapState } from 'vuex'
 
 export default {
@@ -44,15 +51,21 @@ export default {
       loading: false,
       diskNames: [],
       isoNames: [],
+      networkNames: [],
       formItem: {
         mem_size_gb: '',
-        cpu_core: ''
+        cpu_core: '',
+        network_names: []
       }
     }
   },
   mounted () {
     this.formItem.mem_size_gb = this.selectedItem.mem_size_kb / 1024.0 / 1024.0
     this.formItem.cpu_core = this.selectedItem.cpu_core
+    this.formItem.network_names = this.selectedItem.network_names
+    getNetworkNames(this.token).then(res => {
+      this.networkNames = res.data
+    })
   },
   methods: {
     handleSubmit () {

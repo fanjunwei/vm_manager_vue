@@ -75,6 +75,16 @@ export const getIos = (token) => {
   })
 }
 
+export const getNetworkNames = (token) => {
+  return axios.request({
+    url: 'host/networks/',
+    params: {
+      token
+    },
+    method: 'get'
+  })
+}
+
 export const getVmsList = (token) => {
   return axios.request({
     url: 'host/host/',

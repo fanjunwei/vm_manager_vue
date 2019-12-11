@@ -26,6 +26,13 @@
           <span slot="append">核</span>
         </Input>
       </FormItem>
+      <FormItem label="网络" prop="network_names" :rules="[
+            {required: true,type:'array', message: '必填'},
+          ]">
+        <Select multiple v-model="formItem.network_names">
+          <Option v-for="item in networkNames" :value="item" :key="item">{{ item }}</Option>
+        </Select>
+      </FormItem>
       <FormItem label="创建方式">
         <RadioGroup v-model="formItem.is_from_iso" type="button">
           <Radio :label="false">硬盘镜像</Radio>
@@ -72,7 +79,7 @@
 </template>
 
 <script>
-import { getBaseDisks, getIos, createVm } from '@/api/data'
+import { getBaseDisks, getIos, createVm, getNetworkNames } from '@/api/data'
 import { mapState } from 'vuex'
 
 export default {
@@ -81,6 +88,7 @@ export default {
       loading: false,
       diskNames: [],
       isoNames: [],
+      networkNames: [],
       formItem: {
         name: '',
         is_from_iso: false,
@@ -94,6 +102,9 @@ export default {
     })
     getIos(this.token).then(res => {
       this.isoNames = res.data.files
+    })
+    getNetworkNames(this.token).then(res => {
+      this.networkNames = res.data
     })
   },
   methods: {
