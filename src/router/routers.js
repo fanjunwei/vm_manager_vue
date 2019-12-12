@@ -125,7 +125,7 @@ export default [
     path: '/components',
     name: 'components',
     meta: {
-      hideInMenu: false,
+      hideInMenu: true,
       icon: 'logo-buffer',
       title: '组件'
     },
